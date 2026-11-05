@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS consumos (
   proceso_id INT NOT NULL,
   fecha DATE NOT NULL,
   consumo_m3 DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (proceso_id) REFERENCES procesos(id)
+  FOREIGN KEY (proceso_id) REFERENCES procesos(id),
+  -- HU-09: un proceso no puede tener dos registros con la misma fecha
+  UNIQUE KEY uq_consumo_proceso_fecha (proceso_id, fecha)
 );
 
 CREATE TABLE IF NOT EXISTS referencias (
@@ -19,7 +21,8 @@ CREATE TABLE IF NOT EXISTS referencias (
   proceso_id INT NOT NULL,
   mes CHAR(7) NOT NULL,
   valor_m3 DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (proceso_id) REFERENCES procesos(id)
+  FOREIGN KEY (proceso_id) REFERENCES procesos(id),
+  UNIQUE KEY uq_referencia_proceso_mes (proceso_id, mes)
 );
 
 CREATE TABLE IF NOT EXISTS alertas (

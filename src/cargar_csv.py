@@ -36,5 +36,8 @@ if __name__ == "__main__":
         print(f"Archivo rechazado:\n{e}")
         sys.exit(1)
     from db import insertar_consumos, contar_consumos
-    insertar_consumos(filas)
-    print(f"Se cargaron {len(filas)} registros. Total en base: {contar_consumos()}")
+    insertadas, omitidas = insertar_consumos(filas)
+    print(f"Filas en el archivo: {len(filas)}")
+    print(f"Insertadas: {insertadas}")
+    print(f"Omitidas por duplicadas: {omitidas}")
+    print(f"Total en base: {contar_consumos()}")
