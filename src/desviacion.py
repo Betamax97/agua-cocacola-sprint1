@@ -9,15 +9,19 @@ from db import conectar
 # Consumo mensual = suma de los registros del mes, unido con su referencia.
 CONSULTA = """
 SELECT p.nombre AS proceso,
-       DATE_FORMAT(c.fecha, '%Y-%m') AS mes,
-       SUM(c.consumo_m3) AS consumo_m3,
+       m.mes,
+       m.consumo_m3,
        r.valor_m3 AS referencia_m3
-FROM consumos c
-JOIN procesos p ON p.id = c.proceso_id
-JOIN referencias r ON r.proceso_id = c.proceso_id
-                  AND r.mes = DATE_FORMAT(c.fecha, '%Y-%m')
-GROUP BY p.nombre, mes, r.valor_m3
-ORDER BY mes, p.nombre
+FROM (
+    SELECT proceso_id,
+           DATE_FORMAT(fecha, '%Y-%m') AS mes,
+           SUM(consumo_m3) AS consumo_m3
+    FROM consumos
+    GROUP BY proceso_id, mes
+) m
+JOIN procesos p ON p.id = m.proceso_id
+JOIN referencias r ON r.proceso_id = m.proceso_id AND r.mes = m.mes
+ORDER BY m.mes, p.nombre
 """
 
 
